@@ -1,4 +1,4 @@
-Module memcached
+Module memcachedj
 Init init_function
 Function VOID servers(PRIV_VCL, STRING)
 Function VOID set(PRIV_VCL, STRING, STRING, INT, INT)

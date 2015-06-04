@@ -1,15 +1,15 @@
 
 vmoddir = $(VMODDIR)
-vmod_LTLIBRARIES = libvmod_memcached.la
+vmod_LTLIBRARIES = libvmod_memcachedj.la
 
-libvmod_memcached_la_CFLAGS = -I$(VARNISHSRC)/include -I$(VARNISHSRC) \
+libvmod_memcachedj_la_CFLAGS = -I$(VARNISHSRC)/include -I$(VARNISHSRC) \
 	$(LIBMEMCACHED_CFLAGS)
-libvmod_memcached_la_LDFLAGS = -module -export-dynamic -avoid-version -shared \
+libvmod_memcachedj_la_LDFLAGS = -module -export-dynamic -avoid-version -shared \
 	$(LIBMEMCACHED_LIBS)
 
-libvmod_memcached_la_SOURCES = \
+libvmod_memcachedj_la_SOURCES = \
 	vmod_memcached.c
-nodist_libvmod_memcached_la_SOURCES = \
+nodist_libvmod_memcachedj_la_SOURCES = \
 	vcc_if.c \
 	vcc_if.h
 
@@ -21,7 +21,7 @@ VMOD_TESTS = tests/test01.vtc tests/test02.vtc tests/test06.vtc
 endif
 
 
-$(libvmod_memcached_la_OBJECTS): vcc_if.h
+$(libvmod_memcachedj_la_OBJECTS): vcc_if.h
 
 vcc_if.c vcc_if.h: $(VARNISHSRC)/lib/libvmod_std/vmod.py $(top_srcdir)/src/vmod_memcached.vcc
 	$(PYTHON) $(VARNISHSRC)/lib/libvmod_std/vmod.py $(top_srcdir)/src/vmod_memcached.vcc

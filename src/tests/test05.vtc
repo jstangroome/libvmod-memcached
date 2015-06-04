@@ -6,19 +6,19 @@ server s1 {
 } -start
 
 varnish v1 -vcl+backend {
-	import memcached from "${vmod_topbuild}/src/.libs/libvmod_memcached.so";
+	import memcachedj from "${vmod_topbuild}/src/.libs/libvmod_memcachedj.so";
 
 	sub vcl_init {
-		memcached.servers("--SERVER=localhost:24472 --BINARY-PROTOCOL");
+		memcachedj.servers("--SERVER=localhost:24472 --BINARY-PROTOCOL");
 	}
 
 	sub vcl_deliver {
 		set resp.http.init =
-		    memcached.incr_set("test05", 3, 2, 0);
+		    memcachedj.incr_set("test05", 3, 2, 0);
 		set resp.http.high =
-		    memcached.incr_set("test05", 3, 2, 0);
+		    memcachedj.incr_set("test05", 3, 2, 0);
 		set resp.http.low =
-		    memcached.decr_set("test05", 1, 2, 0);
+		    memcachedj.decr_set("test05", 1, 2, 0);
 	}
 } -start
 
