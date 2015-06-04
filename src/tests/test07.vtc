@@ -1,0 +1,25 @@
+varnishtest "Test get_or_fail with no key"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import memcachedj from "${vmod_topbuild}/src/.libs/libvmod_memcachedj.so";
+
+	sub vcl_init {
+		memcachedj.servers("--SERVER=localhost:24472 --BINARY-PROTOCOL");
+	}
+
+	sub vcl_deliver {
+		set resp.http.notfound =
+		    memcachedj.get_or_fail("test07", "TEST:");
+	}
+} -start
+
+client c1 {
+	txreq -url "/"
+	rxresp
+	expect resp.http.notfound == "TEST:NOT FOUND"
+} -run

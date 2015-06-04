@@ -1,0 +1,25 @@
+varnishtest "Test get_or_fail with no connection"
+
+server s1 {
+	rxreq
+	txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import memcachedj from "${vmod_topbuild}/src/.libs/libvmod_memcachedj.so";
+
+	sub vcl_init {
+		memcachedj.servers("--SERVER=localhost:10");
+	}
+
+	sub vcl_deliver {
+		set resp.http.fail =
+		    memcachedj.get_or_fail("test08", "TEST:");
+	}
+} -start
+
+client c1 {
+	txreq -url "/"
+	rxresp
+	expect resp.http.fail == "TEST:CONNECTION FAILURE"
+} -run
