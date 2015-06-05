@@ -118,7 +118,8 @@ vmod_get_or_fail(struct sess *sp, struct vmod_priv *priv, const char *key, const
 	uint32_t flags;
 	memcached_return rc;
 	memcached_st *mc = get_memcached(priv->priv);
-	char *p, *value, *strerror;
+	char *p, *value;
+	const char *strerror;
 
 	if (!mc)
 		return (NULL);
@@ -130,7 +131,9 @@ vmod_get_or_fail(struct sess *sp, struct vmod_priv *priv, const char *key, const
 		}
 		strerror = memcached_strerror(mc, rc);
 		value = WS_Alloc(sp->ws, strlen(fail_prefix) + strlen(strerror) + 1);
-		memcpy(value, fail_prefix, strlen(fail_prefix));
+		if (!value)
+			return (NULL);
+		strcpy(value, fail_prefix);
 		strcat(value, strerror);
 		return (value);
 	}
